@@ -1,4 +1,4 @@
-window.onload = function(){
+window.onload = function () {
     let titulo = document.querySelector('.moviesAddTitulo')
     let formulario = document.querySelector('#formulario');
     let article = document.querySelector('article');
@@ -7,84 +7,106 @@ window.onload = function(){
     article.classList.add('fondoTransparente');
     formulario.classList.add('fondoCRUD');
 
-//------DESDE AQUÍ CONTINUE CON LAS VALIDACIONES DEL FORMULARIO -------//    
-    let form = document.querySelector('.form');
-    form.title.focus();
-    form.addEventListener('submit', (e) => {
-        
-        let errors = [];
+    //------DESDE AQUÍ CONTINÚE CON LAS VALIDACIONES DEL FORMULARIO //
+    //-------------------DE REGISTRO DE PELÍCULAS------------------//    
 
-        let title = document.querySelector('#title');
-        let rating = document.querySelector('#rating');
-        let awards = document.querySelector('#awards');
-        let release_date = document.querySelector('#release_date');
-        let length = document.querySelector('#length');
-        let genre_id = document.querySelector('#genre_id');
+    document.getElementById("title").focus()
 
-        if (title.value == '') {
-            errors.push('El campo titulo no puede estar vacío');
-            title.classList.add('is-invalid');
-        } else {
-            title.classList.add('is-valid');
-            title.classList.remove('is-invalid');
-            form.rating.focus();
-        };
-        if (rating.value <= 0 || rating.value > 10.0) {
-            errors.push('El campo calificación no puede ser menor a cero ni mayor a 10');
-            rating.classList.add('is-invalid');
-        } else {
-            rating.classList.add('is-valid');
-            rating.classList.remove('is-invalid');
-            form.awards.focus();
-        };
-        if (awards.value <= 0 || awards.value > 10) {
-            errors.push('El campo premios no puede ser menor a cero ni mayor a 10');
-            awards.classList.add('is-invalid');
-        } else {
-            awards.classList.add('is-valid');
-            awards.classList.remove('is-invalid');
-            form.release_date.focus();
-        };
-        if (release_date.value == "") {
-            errors.push('El campo fecha de creación no puede estar vacio');
-            release_date.classList.add('is-invalid');
-        } else {
-            release_date.classList.add('is-valid');
-            release_date.classList.remove('is-invalid');
-            form.length.focus();
-        };
-        if (length.value < 60 || length.value > 360) {
-            errors.push('El campo duración no puede ser menor a 60 ni mayor a 360 minutos');
-            length.classList.add('is-invalid');
-        } else {
-            length.classList.add('is-valid');
-            length.classList.remove('is-invalid');
-            form.genre_id.focus();
-        };
-        if (genre_id.value == '') {
-            errors.push('El campo género no puede estar vacío');
-            genre_id.classList.add('is-invalid');
-        } else {
-            genre_id.classList.add('is-valid');
-            genre_id.classList.remove('is-invalid');
-        };
-        
-        //Aquí controlo que es lo que debo hacer si hay o no errores en el formulario
+    let inputs = document.querySelectorAll("#formMoviesAdd input")
+    inputs = [...inputs, document.querySelector("#formMoviesAdd select")]
 
-        if (errors.length > 0) {
-            e.preventDefault();
-            let ulErrors = document.querySelector('.errores');
-            ulErrors.classList.add('alert-warning');
-            ulErrors.innerHTML = '';
-            for (let i = 0; i < errors.length; i++) {
-                ulErrors.innerHTML += `<li >  ${errors[i]} </li>`;
-            };
-        }else{
-            alert('La validación fué exitosa')
-            form.submit();
+
+    const validarCampo = (target, campo, msg, valEsp) => {
+        if (target.value === "" || valEsp) {
+            document.getElementById(`small-${campo}`).innerHTML = `${msg}`
+            document.getElementById(`small-${campo}`).classList.add("is-invalidText")
+            document.getElementById(`${campo}`).classList.add("is-invalidBorder")
+            document.getElementById(`${campo}`).classList.remove("is-validBorder")
+        } else {
+            document.getElementById(`small-${campo}`).innerHTML = ""
+            document.getElementById(`small-${campo}`).classList.remove("is-invalidText")
+            document.getElementById(`${campo}`).classList.remove("is-invalidBorder")
+            document.getElementById(`${campo}`).classList.add("is-validBorder")
         }
+    }
 
+
+    const validarFormulario = (e) => {
+        switch (e.target.name) {
+            case "title":
+                validarCampo(e.target, "title", "Debes completar este campo")
+                break;
+            case "rating":
+                if (+e.target.value < 0 || +e.target.value > 10) {
+                    validarCampo(e.target, "rating", "Entre 0 y 10", true)
+                }else{
+                    validarCampo(e.target, "rating", "Debes completar este campo")
+                }
+                
+                break;
+            case "awards":
+                if (+e.target.value < 0 || +e.target.value > 10) {
+                    validarCampo(e.target, "awards", "Entre 0 y 10", true)
+                }else{
+                    validarCampo(e.target, "awards", "Debes completar este campo")
+                }
+                break;
+            case "release_date":
+                validarCampo(e.target, "release_date", "Debes completar este campo")
+                break;
+            case "length":
+                if (+e.target.value < 60 || +e.target.value > 360) {
+                    validarCampo(e.target, "length", "Entre 60 y 360 minutos", true)
+                }else{
+                    validarCampo(e.target, "length", "Debes completar este campo")
+                }
+                break;
+            case "genre_id":
+                validarCampo(e.target, "genre_id", "Debes completar este campo")
+                break;
+            default:
+                break;
+        }
+    }
+
+    inputs.forEach(input => {
+        input.addEventListener("keyup", validarFormulario)
+        input.addEventListener("blur", validarFormulario)
     });
 
-
+    document.getElementById("formMoviesAdd").addEventListener("submit", (e) =>{
+        let ulErrores = document.querySelector(".errores")
+        let errores = []
+        for (let x = 0; x < 6; x++) {
+            if (e.target[x].value === "" || e.target[x].classList.contains("is-invalidBorder")) {
+                if (e.target[x].value === "") {
+                    validarCampo(e.target[x], e.target[x].name, "Debes completar este campo")
+                    errores.push( `${e.target[x].name}: Debes completar este campo`)
+                } else if (e.target[x].name === "length") {
+                    validarCampo(e.target[x], e.target[x].name, "Entre 60 y 360 minutos", true)
+                    errores.push( `${e.target[x].name}: Entre 60 y 360 minutos`)
+                } else if (e.target[x].name === "rating" || e.target[x].name === "awards"){
+                    validarCampo(e.target[x], e.target[x].name, `Entre 0 y 10`, true)
+                    errores.push( `${e.target[x].name}: Entre 0 y 10`)
+                }
+            }
+        }
+       
+        if (errores.length > 0) {
+            e.preventDefault()
+            
+            ulErrores.classList.add("alert-warning")
+            ulErrores.innerHTML = ""
+            errores.forEach(error => {
+                ulErrores.innerHTML += `<li>${error}</li>`
+            });
+            setTimeout(() => {
+                ulErrores.innerHTML = ""
+            }, 5000)
+        }else{
+            ulErrores.classList.remove("alert-warning")
+            ulErrores.classList.add("alert-exito")
+            ulErrores.innerHTML = "La película se guardó satisfactoriamente."
+        }
+    })
 }

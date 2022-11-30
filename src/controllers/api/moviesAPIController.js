@@ -70,8 +70,6 @@ const moviesAPIController = {
         .catch(error => console.log(error))
     },
     create: (req,res) => {
-        
-        console.log('create',req.body, req.params)
         Movies
         .create(
             {
@@ -110,8 +108,6 @@ const moviesAPIController = {
     },
     update: (req,res) => {
         let movieId = req.params.id;
-        console.log(movieId)
-        console.log(req.body)
         Movies.update(
             {
                 title: req.body.title,
@@ -131,7 +127,7 @@ const moviesAPIController = {
                     meta: {
                         status: 200,
                         total: confirm.length,
-                        url: 'api/movies/:id'
+                        url: 'api/movies/update/:id'
                     },
                     data:confirm
                 }
@@ -149,20 +145,18 @@ const moviesAPIController = {
         })    
         .catch(error => res.send(error))
     },
-    destroy: (req, res) => {
+    destroy: (req,res) => {
         let movieId = req.params.id;
-        console.log(movieId)
         Movies
         .destroy({where: {id: movieId}, force: true}) // force: true es para asegurar que se ejecute la acción
         .then(confirm => {
             let respuesta;
-            console.log('confirm', confirm)
             if(confirm){
                 respuesta ={
                     meta: {
                         status: 200,
                         total: confirm.length,
-                        url: 'api/movies/delete/:id'
+                        url: 'api/movies/destroy/:id'
                     },
                     data:confirm
                 }
