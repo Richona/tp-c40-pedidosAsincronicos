@@ -16,13 +16,7 @@ const moviesController = {
         res.render('home.ejs')
     },
     'detail': (req, res) => {
-        db.Movie.findByPk(req.params.id,
-            {
-                include : ['genre']
-            })
-            .then(movie => {
-                res.render('moviesDetail.ejs', {movie});
-            });
+        res.render('formulario.ejs', {moment});
     },
     'new': (req, res) => {
         db.Movie.findAll({
@@ -51,14 +45,8 @@ const moviesController = {
     },
     //Aqui dispongo las rutas para trabajar con el CRUD
     add: function (req, res) {
-        let promGenres = Genres.findAll();
-        let promActors = Actors.findAll();
-        
-        Promise
-        .all([promGenres, promActors])
-        .then(([allGenres, allActors]) => {
-            return res.render(path.resolve(__dirname, '..', 'views',  'moviesAdd'), {allGenres,allActors})})
-        .catch(error => res.send(error))
+        return res.render('formulario.ejs')
+
     },
     create: function (req,res) {
         Movies
