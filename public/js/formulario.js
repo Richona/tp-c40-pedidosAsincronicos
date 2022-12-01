@@ -10,6 +10,7 @@ window.onload = () => {
     let length = document.getElementById("length")
 
     if (id) {
+        
         fetch("http://localhost:3001/api/movies/" + id)
             .then(function (response) {
                 return response.json();
@@ -29,6 +30,7 @@ window.onload = () => {
             })
 
         let botonEdit = document.getElementById("botonParaActualizar")
+        document.getElementById("botonParaAgregar").style.display = "none"
 
         const putData = async () => {
             const dataUpdate = {
@@ -66,6 +68,9 @@ window.onload = () => {
         })
     } else {
         let botonAdd = document.getElementById("botonParaAgregar")
+        document.getElementById("botonParaActualizar").style.display = "none"
+        document.getElementById("botonParaEliminar").style.display = "none"
+        
         
         const postData = async () => {
             const dataCreate = {

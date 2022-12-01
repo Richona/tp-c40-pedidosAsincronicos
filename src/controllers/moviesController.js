@@ -18,6 +18,9 @@ const moviesController = {
     'detail': (req, res) => {
         res.render('formulario.ejs', {moment});
     },
+    favorita: (req,res) => {
+        res.render('favoritas.ejs')
+    },
     'new': (req, res) => {
         db.Movie.findAll({
             order : [
